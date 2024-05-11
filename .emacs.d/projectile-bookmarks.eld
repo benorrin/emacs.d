@@ -1,0 +1,1 @@
+("~/Documents/GitHub/benorrin.github.io/" "~/Documents/GitHub/circle-of-trust-backend/")

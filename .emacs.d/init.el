@@ -1,0 +1,130 @@
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("org" . "https://orgmode.org/elpa/") t)
+(package-initialize)
+
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; Enable rust-mode
+(require 'rust-mode)
+
+;; Set up company mode for autocompletion
+(add-hook 'rust-mode-hook #'company-mode)
+
+;; Set up rustfmt on save
+(add-hook 'rust-mode-hook #'rust-enable-format-on-save)
+
+;; Set up racer
+(add-hook 'rust-mode-hook #'racer-mode)
+
+;; Set up flycheck
+(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+
+;; Set up lsp-mode
+(add-hook 'rust-mode-hook #'lsp)
+
+;; Define custom keybindings for cargo commands
+(global-set-key (kbd "C-c C-l") 'my-cargo-clippy)
+(global-set-key (kbd "C-c C-r") 'my-cargo-run)
+(global-set-key (kbd "C-c C-b") 'my-cargo-build)
+
+(defun my-cargo-clippy ()
+  "Run cargo clippy."
+  (interactive)
+  (compile "cargo clippy"))
+
+(defun my-cargo-run ()
+  "Run cargo run."
+  (interactive)
+  (compile "cargo run"))
+
+(defun my-cargo-build ()
+  "Run cargo build."
+  (interactive)
+  (compile "cargo build"))
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(notmuch magit doom-themes chess treemacs-projectile projectile treemacs centaur-tabs use-package rust-mode)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+ (require 'org)
+
+ (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+
+(use-package centaur-tabs
+  :demand
+  :config
+  (centaur-tabs-mode t)
+  :bind
+  ("C-<prior>" . centaur-tabs-backward)
+  ("C-<next>" . centaur-tabs-forward))
+
+(setq centaur-tabs-style "bar")
+(setq centaur-tabs-set-icons t)
+(setq centaur-tabs-gray-out-icons 'buffer)
+(setq centaur-tabs-set-bar 'left)
+(setq centaur-tabs-set-modified-marker t)
+
+
+(projectile-mode +1)
+;; Recommended keymap prefix on macOS
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+;; Recommended keymap prefix on Windows/Linux
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+(use-package treemacs
+  :ensure t
+  :config
+  (setq treemacs-follow-mode t)
+  (treemacs-resize-icons 16))
+
+;; Optionally, you can bind a key to toggle Treemacs
+(global-set-key (kbd "C-x t") 'treemacs)
+
+;; Open Treemacs automatically when Emacs starts
+(add-hook 'emacs-startup-hook 'treemacs)
+
+;; Enable treemacs-indent-guide-mode
+(treemacs-indent-guide-mode)
+
+;; Set the style to "line"
+(setq treemacs-indent-guide-style 'line)
+
+(use-package doom-themes
+  :ensure t
+  :config
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-laserwave t))
+
+(global-set-key (kbd "C-c C-w") 'delete-other-windows)
+
+(global-set-key (kbd "C-c C-t") 'new-tab-or-buffer)
+
+(defun new-tab-or-buffer ()
+  "Open a new tab or buffer."
+  (interactive)
+  (switch-to-buffer (generate-new-buffer "*new-buffer*")))
+
+(electric-pair-mode t)
+
+(setq case-fold-search nil)
+
+(use-package notmuch
+  :ensure t
+  :defer t)
+
+(setq notmuch-search-oldest-first nil)
